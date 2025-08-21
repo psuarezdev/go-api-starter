@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"github.com/psuarezdev/go-api-starter/src/auth"
 	"github.com/psuarezdev/go-api-starter/src/config"
 	"github.com/psuarezdev/go-api-starter/src/database"
@@ -12,6 +15,15 @@ import (
 )
 
 func main() {
+	godotenv.Load()
+
+	if config.GetEnvironment() == "production" {
+		gin.SetMode(gin.ReleaseMode)
+		gin.DisableConsoleColor()
+		f, _ := os.Create("gin.log")
+		gin.DefaultWriter = io.MultiWriter(f)
+	}
+
 	database.InitDatabase()
 
 	db := database.GetConnection()
@@ -19,6 +31,7 @@ func main() {
 	db.AutoMigrate(&user.User{})
 
 	router := gin.Default()
+	// router.SetTrustedProxies([]string{"<ip_address>"})
 	router.Use(cors.Default())
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
