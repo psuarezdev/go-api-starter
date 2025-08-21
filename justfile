@@ -11,3 +11,6 @@ dev:
 
 start:
   go run src/main.go
+
+cache-clean:
+  go clean -modcache
