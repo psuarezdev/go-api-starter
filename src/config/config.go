@@ -9,15 +9,15 @@ import (
 	"github.com/joho/godotenv"
 )
 
-/*import (
-	"os"
-	"github.com/joho/godotenv"
-)*/
-
 const API_PREFIX = "/api/v1"
 
+func GetEnvironment() string {
+	godotenv.Load()
+	return os.Getenv("ENV")
+}
+
 func GetConnectionString() string {
-	godotenv.Load(".env")
+	godotenv.Load()
 
 	host := os.Getenv("DB_HOST")
 	portStr := os.Getenv("DB_PORT")
